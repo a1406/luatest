@@ -5,11 +5,20 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+extern int network_main(int port);
+
 lua_State *global_lua;
 
 int main(int argc, char *argv[])
 {
-    
+	int port = 0;
+	if (argc >= 2)
+	{
+		port = atoi(argv[1]);
+	}
+	if (port <= 0)
+		port = 7777;
+	network_main(port);
     return 0;
 }
 

@@ -7,6 +7,12 @@
 #include <fcntl.h>
 #include <arpa/inet.h>
 
+void on_recv_data(char *recvbuf, int n)
+{
+	recvbuf[n] = '\0';			
+	printf("recv %s\n", recvbuf);
+}
+
 #define MAX_CLIENT 10
 
 int max_fd(int a[], int n)  
@@ -131,7 +137,7 @@ int network_main(int port)
 			}
 		}  
           
-		char recvbuf[1024];
+		static char recvbuf[102400];
 //		char sendbuf[1024];
 		for(int i = 1; i < n_client && ret > 0; i++)  
 		{  
@@ -148,9 +154,9 @@ int network_main(int port)
 				n_client--;  
 				continue;  
 			}
-			recvbuf[n] = '\0';
 
-			printf("recv %s\n", recvbuf);
+
+			on_recv_data(recvbuf, n);
   
 // 			strcpy(sendbuf, recvbuf);  
 //  

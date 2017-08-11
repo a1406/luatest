@@ -5,12 +5,37 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <arpa/inet.h>
+
+int get_file_data(char *filename, char *data, int *len)
+{
+	int fd = open(filename, O_RDONLY);
+	struct stat statbuf;
+	fstat(fd, &statbuf);
+	data = malloc(statbuf.st_size + 1);
+	read(fd, data, statbuf.st_size);
+	close(fd);
+	data[statbuf.st_size] = '\0';
+	*len = statbuf.st_size;
+	return (0);
+}
 
 void on_recv_data(char *recvbuf, int n)
 {
-	recvbuf[n] = '\0';			
 	printf("recv %s\n", recvbuf);
+	switch (recvbuf[0])
+	{
+		case 't':  //定时器函数
+		{
+			char filename[128];
+			sscanf(&recvbuf[1], "%s", filename);
+		}
+		break;
+		default:
+			break;
+	}
 }
 
 #define MAX_CLIENT 10

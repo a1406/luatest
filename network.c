@@ -9,15 +9,15 @@
 #include <sys/stat.h>
 #include <arpa/inet.h>
 
-int get_file_data(char *filename, char *data, int *len)
+int get_file_data(char *filename, char **data, int *len)
 {
 	int fd = open(filename, O_RDONLY);
 	struct stat statbuf;
 	fstat(fd, &statbuf);
-	data = malloc(statbuf.st_size + 1);
-	read(fd, data, statbuf.st_size);
+	*data = malloc(statbuf.st_size + 1);
+	read(fd, *data, statbuf.st_size);
 	close(fd);
-	data[statbuf.st_size] = '\0';
+	(*data)[statbuf.st_size] = '\0';
 	*len = statbuf.st_size;
 	return (0);
 }
@@ -31,6 +31,9 @@ void on_recv_data(char *recvbuf, int n)
 		{
 			char filename[128];
 			sscanf(&recvbuf[1], "%s", filename);
+			char *data;
+			int len;
+			get_file_data(filename, &data, &len);
 		}
 		break;
 		default:

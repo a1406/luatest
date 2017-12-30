@@ -10,16 +10,17 @@ function ailib.get_monster_num(raid, monster_id)
 end
 
 function ailib.check_monster_num(raid, monster_id, monster_num)
-    print "enter check monster num"
+    print("enter check monster raid = ", raid)
     while (true) do
-	local num = get_monster_num(raid, monster_id)
+	local num = ailib.get_monster_num(raid, monster_id)
+	print("num = ", num)
 	if (num <= monster_num) then
-	    print "finish check monster num"
+	    print("finish check monster num")
 	    return 0	
 	end
 	coroutine.yield()
     end
-
+    print("bug, you should not be here")
 end
 
 all_raid = {}

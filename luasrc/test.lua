@@ -15,15 +15,13 @@ function raid_func_1(raid)
 --    print("101 dead all")
 end
 
-raid = ailib.create_raid(raid_func_1)
+local raid = ailib.create_raid(raid_func_1)
+local raid_running = coroutine.resume(raid.handle, raid)
 
-
-while (true) do
-    local r = coroutine.resume(raid.handle, raid)
-    if (not r) then
-	break
-    end
-    r = ailib.del_monster(raid, 100, 0)
+while (raid_running) do
+    ailib.del_monster(raid, 100, 0)    
+    raid_running = coroutine.resume(raid.handle)
+--    r = ailib.del_monster(raid, 100, 0)
 --    local r2 = ailib.get_monster_num(raid, 100)
 --    print("r2 = ", r2, "r = ", r)
 end

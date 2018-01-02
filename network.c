@@ -14,7 +14,7 @@ int get_file_data(char *filename, char **data, int *len)
 	int fd = open(filename, O_RDONLY);
 	struct stat statbuf;
 	fstat(fd, &statbuf);
-	*data = malloc(statbuf.st_size + 1);
+	*data = (char *)malloc(statbuf.st_size + 1);
 	read(fd, *data, statbuf.st_size);
 	close(fd);
 	(*data)[statbuf.st_size] = '\0';

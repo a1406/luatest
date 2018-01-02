@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 
 
 void scriptingInit(int setup) {
-    lua_State *lua = lua_open();
-
+//    lua_State *lua = luaL_open();
+	struct lua_State *lua = luaL_newstate();
 	if (setup)
 	{
 	}

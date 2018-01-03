@@ -9,9 +9,7 @@
 #include <set>
 extern "C"
 {
-#include "lua.h"
-#include <lualib.h>
-#include <lauxlib.h>
+#include "stack_test/stack_dump.h"
 };
 
 
@@ -26,7 +24,7 @@ void init_lua(struct lua_State *L)
 	luaL_loadfile(L, "test.lua");
 	lua_pcall(L, 0, 0, 0);
 
-	int type = lua_getglobal(L, "ailib.test1");
+	int type = lua_getglobal(L, "ailib");
 	printf("get test1 return %d\n", type);
 	
 }

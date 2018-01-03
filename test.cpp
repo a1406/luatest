@@ -9,6 +9,12 @@
 #include "lua.h"
 #include <lualib.h>
 #include <lauxlib.h>
+#include <set>
+
+using namespace std;
+static int raid_uuid;
+static int monster_uuid;
+set<int> all_raid;
 
 void init_lua(struct lua_State *L)
 {
@@ -38,7 +44,7 @@ void parse_cmd( char *line, int *argc, char *argv[] )
 				++line;
 		}
 	}
-	*argc = n + 1;
+	*argc = n;
 }
 
 int main(int argc, char *argv[])
@@ -80,21 +86,68 @@ int main(int argc, char *argv[])
 				parse_cmd(buf, &cmd_argc, &cmd_argv[0]);
 				if (strcmp(cmd_argv[0], "add_raid") == 0)
 				{
+					++raid_uuid;
+					all_raid.insert(raid_uuid);
+					printf("add_raid %d\n", raid_uuid);
+				}
+				else if (strcmp(cmd_argv[0], "del_raid") == 0)
+				{
+					if (cmd_argc != 2)
+					{
+						printf("argc[%d] != 2\n", cmd_argc);
+						continue;
+					}
+					int uuid = atoi(cmd_argv[1]);
+					if (all_raid.find(uuid) == all_raid.end())
+					{
+						printf("can not find raid %d\n", uuid);
+						continue;
+					}
+					all_raid.erase(uuid);
+					printf("del_raid %d\n", uuid);						
 				}
 				else if (strcmp(cmd_argv[0], "add_monster") == 0)
 				{
-				}
-				else if (strcmp(cmd_argv[0], "del_monster") == 0)
-				{
+					if (cmd_argc != 3)
+					{
+						printf("argc[%d] != 3\n", cmd_argc);
+						continue;
+					}
+					int uuid = atoi(cmd_argv[1]);					
+					int monster_id = atoi(cmd_argv[2]);
+					if (all_raid.find(uuid) == all_raid.end())
+					{
+						printf("can not find raid %d\n", uuid);
+						continue;
+					}
+					++monster_uuid;
+					printf("add_monster[%d][%d] at raid %d\n", monster_id, monster_uuid, uuid);						
 				}
 				else if (strcmp(cmd_argv[0], "kill_monster") == 0)
 				{
+					if (cmd_argc != 3)
+					{
+						printf("argc[%d] != 3\n", cmd_argc);
+						continue;
+					}
+					int uuid = atoi(cmd_argv[1]);					
+					int monster_uuid = atoi(cmd_argv[2]);
+					if (all_raid.find(uuid) == all_raid.end())
+					{
+						printf("can not find raid %d\n", uuid);
+						continue;
+					}
+					printf("kill_monster[%d] at raid %d\n", monster_uuid, uuid);						
+				}
+				else
+				{
+					printf("unknow command\n");
 				}
 			}
 		}
 		else
 		{
-			printf("timeout\n");
+//			printf("timeout\n");
 		}
 	}
     return 0;

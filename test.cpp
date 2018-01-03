@@ -6,10 +6,14 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <assert.h>
+#include <set>
+extern "C"
+{
 #include "lua.h"
 #include <lualib.h>
 #include <lauxlib.h>
-#include <set>
+};
+
 
 using namespace std;
 static int raid_uuid;
@@ -19,8 +23,12 @@ set<int> all_raid;
 void init_lua(struct lua_State *L)
 {
 	luaL_openlibs(L);	  // link lua lib
-	luaL_loadfile(L, "luasrc/test.lua");
+	luaL_loadfile(L, "test.lua");
 	lua_pcall(L, 0, 0, 0);
+
+	int type = lua_getglobal(L, "ailib.test1");
+	printf("get test1 return %d\n", type);
+	
 }
 
 #define MAX_GM_ARGV 10

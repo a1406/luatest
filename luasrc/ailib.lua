@@ -1,4 +1,9 @@
 ailib = {}
+
+function ailib.test1()
+    print("calling ailib.test1")
+end
+
 function ailib.get_monster_num(raid, monster_id)
     local ret = 0
     for i,v in pairs(raid.all_monster) do

@@ -4,6 +4,42 @@
 #include <string.h>
 #include <sys/select.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <assert.h>
+#include "lua.h"
+#include <lualib.h>
+#include <lauxlib.h>
+
+void init_lua(struct lua_State *L)
+{
+	luaL_openlibs(L);	  // link lua lib
+	luaL_loadfile(L, "luasrc/test.lua");
+	lua_pcall(L, 0, 0, 0);
+}
+
+#define MAX_GM_ARGV 10
+void parse_cmd( char *line, int *argc, char *argv[] )
+{
+	int n     = 0;
+	argv[ 0 ] = line;
+	while ( *line && n < MAX_GM_ARGV )
+	{
+		switch ( *line )
+		{
+			case ' ':
+			case '	':
+			case '\n':
+				*line = '\0';
+				if ( argv[ n ][ 0 ] != '\0' ) ++n;
+				++line;
+				argv[ n ] = line;
+				break;
+			default:
+				++line;
+		}
+	}
+	*argc = n + 1;
+}
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +47,11 @@ int main(int argc, char *argv[])
     struct timeval tv;
 	char buf[201];
 	int max_fd = 0;
+	int   cmd_argc = 0;
+	char *cmd_argv[ MAX_GM_ARGV ];
+
+	struct lua_State *L = luaL_newstate();
+	init_lua(L);
 
 	for (;;)
 	{
@@ -35,7 +76,8 @@ int main(int argc, char *argv[])
 					exit(1);
 				}
 				buf[nread] = '\0';
-				printf("read[%d] %s\n", nread, buf);
+//				printf("read[%d] %s\n", nread, buf);
+				parse_cmd(buf, &cmd_argc, &cmd_argv[0]);
 			}
 		}
 		else

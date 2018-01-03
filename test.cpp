@@ -78,6 +78,18 @@ int main(int argc, char *argv[])
 				buf[nread] = '\0';
 //				printf("read[%d] %s\n", nread, buf);
 				parse_cmd(buf, &cmd_argc, &cmd_argv[0]);
+				if (strcmp(cmd_argv[0], "add_raid") == 0)
+				{
+				}
+				else if (strcmp(cmd_argv[0], "add_monster") == 0)
+				{
+				}
+				else if (strcmp(cmd_argv[0], "del_monster") == 0)
+				{
+				}
+				else if (strcmp(cmd_argv[0], "kill_monster") == 0)
+				{
+				}
 			}
 		}
 		else

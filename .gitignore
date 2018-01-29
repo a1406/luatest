@@ -1,4 +1,5 @@
 luatest
+test
 *.o
 *.a
 *~
